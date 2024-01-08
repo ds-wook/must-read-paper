@@ -60,7 +60,7 @@ class BaseModel(ABC):
         kfold = StratifiedKFold(n_splits=self.cfg.data.n_splits, shuffle=True, random_state=self.cfg.data.seed)
 
         for fold, (train_idx, valid_idx) in enumerate(iterable=kfold.split(X=X, y=y), start=1):
-            with wandb.init(dir="never", project=self.cfg.experiment.project, name=f"fold-{fold}"):
+            with wandb.init(dir="never", project=self.cfg.experiment.project, name=f"cat-fold-{fold}"):
                 X_train, X_valid = X.iloc[train_idx], X.iloc[valid_idx]
                 y_train, y_valid = y.iloc[train_idx], y.iloc[valid_idx]
 

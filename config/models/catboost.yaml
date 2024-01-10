@@ -1,5 +1,6 @@
 params:
   task_type: CPU
+  boosting_type: Ordered
   loss_function: MultiClass
   eval_metric: MultiClass
   learning_rate: 0.05

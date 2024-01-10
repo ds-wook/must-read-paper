@@ -11,6 +11,7 @@ from omegaconf import DictConfig
 from models.base import BaseModel
 
 
+
 class XGBoostTrainer(BaseModel):
     def __init__(self, cfg: DictConfig) -> None:
         super().__init__(cfg)
@@ -92,7 +93,10 @@ class LightGBMTrainer(BaseModel):
             callbacks=[
                 lgb.log_evaluation(self.cfg.models.verbose_eval),
                 lgb.early_stopping(self.cfg.models.early_stopping_rounds),
+                wandb.lightgbm.wandb_callback(),
             ],
         )
+
+        wandb.lightgbm.log_summary(model)
 
         return model

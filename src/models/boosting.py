@@ -6,10 +6,9 @@ import pandas as pd
 import wandb
 import xgboost as xgb
 from catboost import CatBoostClassifier, Pool
-from omegaconf import DictConfig
+from omegaconf import DictConfig, OmegaConf
 
 from models.base import BaseModel
-
 
 
 class XGBoostTrainer(BaseModel):
@@ -27,7 +26,7 @@ class XGBoostTrainer(BaseModel):
         dvalid = xgb.DMatrix(X_valid, y_valid)
 
         model = xgb.train(
-            dict(self.cfg.models.params),
+            OmegaConf.to_container(self.cfg.models.params),
             dtrain=dtrain,
             evals=[(dtrain, "train"), (dvalid, "eval")],
             num_boost_round=self.cfg.models.num_boost_round,
@@ -88,7 +87,7 @@ class LightGBMTrainer(BaseModel):
         model = lgb.train(
             train_set=train_set,
             valid_sets=[train_set, valid_set],
-            params=dict(self.cfg.models.params),
+            params=OmegaConf.to_container(self.cfg.models.params),
             num_boost_round=self.cfg.models.num_boost_round,
             callbacks=[
                 lgb.log_evaluation(self.cfg.models.verbose_eval),

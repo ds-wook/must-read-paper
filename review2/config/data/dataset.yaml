@@ -1,0 +1,22 @@
+path: input/open_v2/
+encoder: resources/encoder/
+shift: 1
+train: train
+test: test
+target: label
+submit: sample_submission
+n_splits: 5
+seed: 42
+input_features:
+- start_position
+- end_position
+- disease_type
+- disease_state
+- reference_date
+- reference_journal
+- reference_title
+cat_features:
+- disease_type
+- disease_state
+- reference_journal
+- reference_title

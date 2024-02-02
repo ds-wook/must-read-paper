@@ -7,12 +7,11 @@ import joblib
 import numpy as np
 import pandas as pd
 import xgboost as xgb
+from data.dataset import load_test_dataset
+from models.base import ModelResult
 from omegaconf import DictConfig
 from pytorch_tabnet.tab_model import TabNetRegressor
 from tqdm import tqdm
-
-from data.dataset import load_test_dataset
-from models.base import ModelResult
 
 
 def inference_models(result: list[ModelResult], test_x: pd.DataFrame) -> np.ndarray:
@@ -40,7 +39,7 @@ def inference_models(result: list[ModelResult], test_x: pd.DataFrame) -> np.ndar
     return preds
 
 
-@hydra.main(config_path="../config/", config_name="predict")
+@hydra.main(config_path="../config/", config_name="predict", version_base="1.2.0")
 def _main(cfg: DictConfig):
     result = joblib.load(Path(cfg.models.path) / f"{cfg.models.results}.pkl")
     test_x = load_test_dataset(cfg)

@@ -15,7 +15,9 @@ from tqdm import tqdm
 
 
 @torch.inference_mode()
-def infer_embedding(batch, sequence_representations, token_representations) -> list[np.ndarray]:
+def infer_embedding(
+    batch: torch.Tensor, sequence_representations: list[torch.Tensor], token_representations: torch.Tensor
+) -> list[np.ndarray]:
     for i, (_, seq) in enumerate(batch):
         sequence_representations.append(token_representations[i, 1 : len(seq) + 1].mean(0))
 

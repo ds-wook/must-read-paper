@@ -23,9 +23,6 @@ def save_embedding(data: list[tuple[int, str]], file_name: Path, batch_size: int
     model.cuda()
 
     batches = [data[i : i + batch_size] for i in range(0, len(data), batch_size)]
-    print("data length:", len(data))
-    print("batches num:", len(batches))
-
     sequence_representations = []
 
     for batch in tqdm(batches):
@@ -42,7 +39,6 @@ def save_embedding(data: list[tuple[int, str]], file_name: Path, batch_size: int
         torch.cuda.empty_cache()
 
     sequence_representations = np.array([emb.detach().cpu().numpy() for emb in sequence_representations])
-    print("embedding shape:", sequence_representations.shape)
 
     try:
         np.save(file_name, sequence_representations)

@@ -83,21 +83,26 @@ def _main(cfg: DictConfig):
             for seq, end_pos in zip(df_test.antigen_seq, df_test.end_position)
         ]
 
-        save_embedding(list(zip(df_train.index, df_train.epitope_seq)), save_path / "temp_train_epitope_esm_emb.npy")
-        save_embedding(
-            list(zip(df_train.index, train_antigen_seq_left)), save_path / "temp_train_antigen_left_esm_emb.npy"
-        )
-        save_embedding(
-            list(zip(df_train.index, train_antigen_seq_right)), save_path / "temp_train_antigen_right_esm_emb.npy"
-        )
+        seq_dataset = [
+            list(zip(df_train.index, df_train.epitope_seq)),
+            list(zip(df_train.index, train_antigen_seq_left)),
+            list(zip(df_train.index, train_antigen_seq_right)),
+            list(zip(df_test.index, df_test.epitope_seq)),
+            list(zip(df_test.index, test_antigen_seq_left)),
+            list(zip(df_test.index, test_antigen_seq_right)),
+        ]
 
-        save_embedding(list(zip(df_test.index, df_test.epitope_seq)), save_path / "temp_test_epitope_esm_emb.npy")
-        save_embedding(
-            list(zip(df_test.index, test_antigen_seq_left)), save_path / "temp_test_antigen_left_esm_emb.npy"
-        )
-        save_embedding(
-            list(zip(df_test.index, test_antigen_seq_right)), save_path / "temp_test_antigen_right_esm_emb.npy"
-        )
+        names = [
+            "train_epitope_esm_emb.npy",
+            "train_antigen_left_esm_emb.npy",
+            "train_antigen_right_esm_emb.npy",
+            "test_epitope_esm_emb.npy",
+            "test_antigen_left_esm_emb.npy",
+            "test_antigen_right_esm_emb.npy",
+        ]
+
+        for data, name in zip(seq_dataset, names):
+            save_embedding(data, save_path / name)
 
 
 if __name__ == "__main__":

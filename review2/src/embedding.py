@@ -14,7 +14,14 @@ from omegaconf import DictConfig
 from tqdm import tqdm
 
 
-@torch.no_grad()
+@torch.inference_mode()
+def infer_embedding(batch, sequence_representations, token_representations) -> list[np.ndarray]:
+    for i, (_, seq) in enumerate(batch):
+        sequence_representations.append(token_representations[i, 1 : len(seq) + 1].mean(0))
+
+    return sequence_representations
+
+
 def save_embedding(data: list[tuple[int, str]], file_name: Path, batch_size: int = 8) -> None:
     torch.cuda.empty_cache()
     model, alphabet = esm.pretrained.esm1b_t33_650M_UR50S()
@@ -31,8 +38,7 @@ def save_embedding(data: list[tuple[int, str]], file_name: Path, batch_size: int
         results = model(batch_tokens.cuda(), repr_layers=[33], return_contacts=True)
         token_representations = results["representations"][33]
 
-        for i, (_, seq) in enumerate(batch):
-            sequence_representations.append(token_representations[i, 1 : len(seq) + 1].mean(0))
+        sequence_representations = infer_embedding(batch, sequence_representations, token_representations)
 
         del batch_tokens
         gc.collect()
